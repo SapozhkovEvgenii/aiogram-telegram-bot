@@ -14,7 +14,7 @@ load_dotenv()
 
 # pg_db = PostgresHandler(config('PG_LINK'))
 # scheduler = AsyncIOScheduler(timezone='Europe/Minsk')
-# admins = [int(admin_id) for admin_id in os.environ['ADMINS'].split(',')]
+admins = [int(admin_id) for admin_id in os.environ['ADMINS'].split(',')]
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
