@@ -12,3 +12,4 @@ class User(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     telegram_id = mapped_column(BigInteger)
+    telegram_username: Mapped[str]
