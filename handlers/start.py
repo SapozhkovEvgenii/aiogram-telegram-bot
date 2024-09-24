@@ -2,7 +2,11 @@ from aiogram import Router, F
 from aiogram.filters import CommandStart, Command, Filter, BaseFilter
 from aiogram.types import Message
 
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from keyboards.text_keyboard import main_keyboard
+from db_models.user import User
 
 start_router = Router()
 
@@ -27,8 +31,26 @@ async def cmd_start(message: Message):
 
 
 @start_router.message(CommandWithoutPrefix("SignUp"))
-async def cmd_signup(message: Message):
-    await message.answer("Process of registration!!!")
+async def cmd_signup(message: Message, session: AsyncSession):
+    user = None
+    try:
+        query = select(User).where(User.telegram_id == message.from_user.id)
+        result = await session.execute(query)
+        user = result.scalar()
+    except Exception:
+        print("THERE IS SUCH USER IN THE DATABASE!!!!!")
+
+    if not user:
+        user_obj = User(
+            telegram_id=message.from_user.id,
+            telegram_username=message.from_user.username,
+            first_name=message.from_user.first_name
+        )
+        session.add(user_obj)
+        await session.commit()
+        await message.answer("Registration was successful!!!")
+    else:
+        await message.answer("You have already registered!!!")
 
 
 @start_router.message(Command("start_2"))
