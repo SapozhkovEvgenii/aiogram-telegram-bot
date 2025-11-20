@@ -7,10 +7,6 @@ from db_models.user import Base
 
 load_dotenv(find_dotenv())
 
-# DB_URL=postgresql+asyncpg://login:password@localhost:5432/db_name
-
-# engine = create_async_engine(os.getenv('DB_LITE'), echo=True)
-
 engine = create_async_engine(os.getenv('DB_URL'), echo=True)  # type: ignore
 
 session_maker = async_sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)

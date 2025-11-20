@@ -11,13 +11,11 @@ from db_models.user import User
 start_router = Router()
 
 
-# Custom filter for commands without prefix
 class CommandWithoutPrefix(BaseFilter):
     def __init__(self, command: str):
         self.command = command.lower()
 
     async def __call__(self, message: Message) -> bool:
-        # Check if the message text matches the command (case-insensitive)
         return message.text.strip().lower() == self.command  # type: ignore
 
 
@@ -38,7 +36,7 @@ async def cmd_signup(message: Message, session: AsyncSession):
         result = await session.execute(query)
         user = result.scalar()
     except Exception:
-        print("THERE IS SUCH USER IN THE DATABASE!!!!!")
+        print("THERE IS SUCH USER IN THE DATABASE!")
 
     if not user:
         user_obj = User(
@@ -48,9 +46,9 @@ async def cmd_signup(message: Message, session: AsyncSession):
         )
         session.add(user_obj)
         await session.commit()
-        await message.answer("Registration was successful!!!")
+        await message.answer("Registration was successful!")
     else:
-        await message.answer("You have already registered!!!")
+        await message.answer("You have already registered!")
 
 
 @start_router.message(Command("start_2"))
@@ -65,7 +63,6 @@ async def cmd_start_3(message: Message):
 
 @start_router.message()
 async def cmd_start_any(message: Message):
-    print(message.text)  # For debugging purposes
     if message.text.strip().lower() == "signup":  # type: ignore
         await message.answer("Process of registration!!!")
 
